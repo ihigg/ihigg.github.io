@@ -1,13 +1,14 @@
 const cellSize = 30;
 const SIZE = 50;
-const fill = "#E0C3FC";
-
 const lerp = (x, y, a) => x * (1 - a) + y * a;
 
 let canvas;
 let ctx;
 let stage;
 let output;
+let rootElement;
+
+let fill = "#E0C3FC";
 
 let numCirclesX;
 let numCirclesY;
@@ -20,6 +21,10 @@ let pointA;
 let pointB;
 
 function init() {
+    rootElement = document.documentElement;
+    let style = window.getComputedStyle(rootElement);
+    fill = style.getPropertyValue('--c2');
+    
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
     stage = new createjs.Stage("canvas");
