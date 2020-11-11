@@ -14,11 +14,7 @@
   }
   
   #container {
-  /*  min-height: 100vh; 
-      height: 100vh;
-      width: 100vw; */
       display:flex;
-      display: flex;
       justify-content: center;
       align-items: center;
       margin: auto;
@@ -27,10 +23,7 @@
   }
   
   .overlay {
-  /*     height:0px; */
-  /*     overflow:visible; */
       pointer-events:none; 
-  /*     background:none !important; */
   }
   
   #card {
