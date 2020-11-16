@@ -1,6 +1,9 @@
 const cellSize = 30;
 const SIZE = 50;
+const maxRadius = 21; // Seems to be the radius that fills a cell
+
 const lerp = (x, y, a) => x * (1 - a) + y * a;
+const clamp = (a, min = 0, max = 1) => Math.min(max, Math.max(min, a));
 
 let canvas;
 let ctx;
@@ -40,10 +43,11 @@ function init() {
 
 function addCircle(x, y, r, fill) {
     let circle = new createjs.Shape();
+    // The coordinate arguments for the drawcircle function are for offset
     circle.graphics.beginFill(fill).drawCircle(0, 0, r);
+    // So we set these seperately
     circle.x = x;
     circle.y = y;
-    circle.name = "circle";
     stage.addChild(circle);
     return circle;
 }
@@ -54,7 +58,7 @@ function makeCircles() {
             const circle = addCircle(
                 j * cellSize + cellSize * 0.5,
                 i * cellSize + cellSize * 0.5,
-                2,
+                2, // Just a random default
                 fill
             );
             circles.push(circle);
@@ -62,27 +66,41 @@ function makeCircles() {
     }
 }
 
+// Add the endpoints
 function addControl(x, y) {
     let control = addCircle(x,y,10,"black");
-    control.on("pressmove", drag);
-    control.cursor = "grab";
+
+    // Add the border
     control.graphics.endFill();
     control.graphics.setStrokeStyle(1);
     control.graphics.beginStroke("#FFFFFF");
     control.graphics.drawCircle(0,0,10);
+    
+    control.on("pressmove", drag);
+    control.cursor = "grab";
+    
     return control;
 }
 
 function loop() {
     circles.forEach((circle) => {
-        let p = new createjs.Point(circle.x, circle.y);
-        let A = new createjs.Point(pointA.x, pointA.y);
-        let B = new createjs.Point(pointB.x, pointB.y);
+        // Make objects that project function can parse
+        let p = {x:circle.x, y:circle.y};
+        let A = {x:pointA.x, y:pointA.y};
+        let B = {x:pointB.x, y:pointB.y};
         
-        let projection = project(p,A,B);
+        // Where is the point located relative to the endpoints?
+        // Ranges from 0 for point A to 1 for point B
+        let t = project(p,A,B).t;
 
-        let r = lerp(0,21,projection.t);
+        // A circle's area grows exponentially with it's radius
+        // However, we want a linear transition
+        // So, we adjust our radius to grow inversely to the area
+        let inverse = Math.sqrt(maxRadius * maxRadius * t);
+
+        let r = clamp(inverse,0,maxRadius);
         
+        // Clear the old version and draw the new one
         circle.graphics.clear();
         circle.graphics.beginFill(fill).drawCircle(0, 0, r);
     });

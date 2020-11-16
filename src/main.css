@@ -1,6 +1,12 @@
 :root {
-    --c1: #8EC5FC;
+    --c1: #fcfff5;
+    --c2: #f1502f;
+    /*--c1: #fffefe;
+    --c2: #b4d8e0;
+     --c1: #8EC5FC;
     --c2: #E0C3FC;
+    --c1: #fbedef;
+    --c2: #fec595; */
   }
   #canvas {
     position: fixed;
