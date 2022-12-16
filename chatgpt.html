@@ -42,10 +42,10 @@
     function updateBallPosition() {
       // Check for ball collision with walls
       if (ballX + dx > canvas.width - ballRadius || ballX + dx < ballRadius) {
-        dx = -dx;
+        dx = 0;
       }
       if (ballY + dy > canvas.height - ballRadius || ballY + dy < ballRadius) {
-        dy = -dy;
+        dy = 0;
       }
 
       // Update ball position
