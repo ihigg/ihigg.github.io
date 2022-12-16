@@ -75,11 +75,10 @@
 
         // Update ball movement direction based on cursor position
         function updateBallDirection() {
-        // Calculate new movement direction
-        dx = lerp(dx, cursorX - ballX, 0.1);
-        dy = lerp(dy, cursorY - ballY, 0.1);
+            // Calculate new movement direction
+            dx = lerp(ballX, cursorX, 0.1);
+            dy = lerp(ballY, cursorY, 0.1);
         }
-
 
         // Update canvas
         function draw() {
