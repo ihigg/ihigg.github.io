@@ -33,6 +33,9 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
+    // Set threshold distance
+    var threshold = 20;
+
     // Draw ball on canvas
     function drawBall() {
       context.beginPath();
@@ -71,9 +74,12 @@
       var distance = Math.sqrt(xDist * xDist + yDist * yDist);
 
       // Calculate new movement direction
-      if (distance > 0) {
+      if (distance > threshold) {
         dx = (xDist / distance) * speed;
         dy = (yDist / distance) * speed;
+      } else {
+        dx = 0;
+        dy = 0;
       }
     }
 
