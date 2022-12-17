@@ -16,8 +16,8 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 // Constants for the canvas width and height
-const CANVAS_WIDTH = canvas.width;
-const CANVAS_HEIGHT = canvas.height;
+var CANVAS_WIDTH = canvas.width;
+var CANVAS_HEIGHT = canvas.height;
 
 const rgbMapping = [
   'rgb(66, 30, 15)',
@@ -108,5 +108,14 @@ function drawPixel(x, y, color) {
   ctx.fillRect(x, y, 1, 1);
 }
 
-// draw the mandelbrot set
+// Update the canvas when the window is resized
+window.addEventListener('resize', function() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  CANVAS_WIDTH = canvas.width;
+  CANVAS_HEIGHT = canvas.height;
+  drawMandelbrot();
+});
+
+// Draw the mandelbrot set
 drawMandelbrot();
