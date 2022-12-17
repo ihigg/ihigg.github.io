@@ -74,24 +74,21 @@ function map(value, min1, max1, min2, max2) {
   return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
 }
 
-// A function to calculate the number of iterations for a given complex number
+// A function to calculate the number of iterations for a given complex number, using the acceleratted escape time algorithm
 function iterations(x, y) {
   let a = x;
   let b = y;
-  let n = 0;
-  while (n < MAX_ITERATIONS) {
+  for (let n = 0; n < MAX_ITERATIONS; n++) {
     let aa = a * a;
     let bb = b * b;
-    let twoab = 2.0 * a * b;
+    let twoab = 2 * a * b;
     a = aa - bb + x;
     b = twoab + y;
-    // if a + bi is greater than 2 in magnitude, it will diverge to infinity
-    if (Math.sqrt((a * a) + (b * b)) > 2.0) {
-      break;
+    if (aa + bb > 16) {
+      return n;
     }
-    n++;
   }
-  return n;
+  return MAX_ITERATIONS;
 }
 
 // A function to sample the color gradient
