@@ -19,23 +19,23 @@ canvas.height = window.innerHeight;
 var CANVAS_WIDTH = canvas.width;
 var CANVAS_HEIGHT = canvas.height;
 
-const rgbMapping = [
-  'rgb(66, 30, 15)',
-  'rgb(25, 7, 26)',
-  'rgb(9, 1, 47)',
-  'rgb(4, 4, 73)',
-  'rgb(0, 7, 100)',
-  'rgb(12, 44, 138)',
-  'rgb(24, 82, 177)',
-  'rgb(57, 125, 209)',
-  'rgb(134, 181, 229)',
-  'rgb(211, 236, 248)',
-  'rgb(241, 233, 191)',
-  'rgb(248, 201, 95)',
-  'rgb(255, 170, 0)',
-  'rgb(204, 128, 0)',
-  'rgb(153, 87, 0)',
-  'rgb(106, 52, 3)'
+const mapping = [
+  [66, 30, 15],
+  [25, 7, 26],
+  [9, 1, 47],
+  [4, 4, 73],
+  [0, 7, 100],
+  [12, 44, 138],
+  [24, 82, 177],
+  [57, 125, 209],
+  [134, 181, 229],
+  [211, 236, 248],
+  [241, 233, 191],
+  [248, 201, 95],
+  [255, 170, 0],
+  [204, 128, 0],
+  [153, 87, 0],
+  [106, 52, 3]
 ];
 
 // A function to draw a mandelbrot set
@@ -97,14 +97,14 @@ function iterations(x, y) {
 // A function to sample the color gradient
 function calculateColor(n) {
   if (n === MAX_ITERATIONS) {
-    return 'rgb(0, 0, 0)';
+    return [0, 0, 0];
   }
-  return rgbMapping[n % rgbMapping.length];
+  return mapping[n % mapping.length];
 }
 
 // A function to draw a pixel
 function drawPixel(x, y, color) {
-  ctx.fillStyle = color;
+  ctx.fillStyle = 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')';
   ctx.fillRect(x, y, 1, 1);
 }
 
