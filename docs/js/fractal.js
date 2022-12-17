@@ -1,5 +1,4 @@
-// constants for the size of the canvas and the maximum number of iterations
-const CANVAS_SIZE = 400;
+// constant for the maximum number of iterations
 const MAX_ITERATIONS = 100;
 
 // these constants determine the region of the complex plane that is rendered
@@ -12,43 +11,83 @@ const Y_MAX = 1;
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-// fill the canvas with a black background
-ctx.fillStyle = 'black';
-ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+// Set the canvas dimensions to the window size
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-// iterate over every pixel on the canvas
-for (let x = 0; x < CANVAS_SIZE; x++) {
-  for (let y = 0; y < CANVAS_SIZE; y++) {
-    // map the pixel coordinates to the complex plane
-    let c_re = x / CANVAS_SIZE * (X_MAX - X_MIN) + X_MIN;
-    let c_im = y / CANVAS_SIZE * (Y_MAX - Y_MIN) + Y_MIN;
+// Constants for the canvas width and height
+const CANVAS_WIDTH = canvas.width;
+const CANVAS_HEIGHT = canvas.height;
 
-    // use the Mandelbrot formula to generate the sequence
-    let z_re = c_re, z_im = c_im;
-    let isInside = true;
-    for (let n = 0; n < MAX_ITERATIONS; n++) {
-      // compute the real and imaginary components of the square of the current number
-      let z_re_squared = z_re * z_re;
-      let z_im_squared = z_im * z_im;
+// A function to draw a mandelbrot set
+function drawMandelbrot() {
+    // for each pixel in the canvas
+    for (let xPixel = 0; xPixel < CANVAS_WIDTH; xPixel++) {
+        for (let yPixel = 0; yPixel < CANVAS_HEIGHT; yPixel++) {
+            // calculate the corresponding complex number
+            let x = mapToReal(xPixel);
+            let y = mapToImaginary(yPixel);
 
-      // apply the Mandelbrot formula to compute the next number in the sequence
-      z_im = 2 * z_re * z_im + c_im;
-      z_re = z_re_squared - z_im_squared + c_re;
+            // calculate the number of iterations
+            let n = iterations(x, y);
 
-      // if the magnitude of the current number is greater than 2, it will tend towards infinity
-      // so we consider it to be outside the set and break out of the loop
-      if (z_re_squared + z_im_squared > 4) {
-        isInside = false;
-        break;
-      }
+            // calculate the color based on the number of iterations
+            let color = calculateColor(n);
+
+            // draw the pixel
+            drawPixel(xPixel, yPixel, color);
+        }
     }
-
-    // if the number is inside the set, color the pixel black; otherwise, color it white
-    if (isInside) {
-      ctx.fillStyle = 'black';
-    } else {
-      ctx.fillStyle = 'white';
-    }
-    ctx.fillRect(x, y, 1, 1);
-  }
 }
+
+// A function to map a pixel coordinate to a real number
+function mapToReal(xPixel) {
+    return map(xPixel, 0, CANVAS_WIDTH, X_MIN, X_MAX);
+}
+
+// A function to map a pixel coordinate to an imaginary number
+function mapToImaginary(yPixel) {
+    return map(yPixel, 0, CANVAS_HEIGHT, Y_MIN, Y_MAX);
+}
+
+// A function to map a value from one range to another
+function map(value, min1, max1, min2, max2) {
+    return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
+}
+
+// A function to calculate the number of iterations for a given complex number
+function iterations(x, y) {
+    let a = x;
+    let b = y;
+    let n = 0;
+    while (n < MAX_ITERATIONS) {
+        let aa = a * a;
+        let bb = b * b;
+        let twoab = 2.0 * a * b;
+        a = aa - bb + x;
+        b = twoab + y;
+        // if a + bi is greater than 2 in magnitude, it will diverge to infinity
+        if (Math.sqrt((a * a) + (b * b)) > 2.0) {
+            break;
+        }
+        n++;
+    }
+    return n;
+}
+
+// A function to calculate the color of a pixel based on the number of iterations
+function calculateColor(n) {
+    let brightness = (n / MAX_ITERATIONS) * 100;
+    brightness = brightness > 100 ? 100 : brightness;
+    brightness = brightness < 0 ? 0 : brightness;
+    return 'hsl(0, 0%, ' + brightness + '%)';
+}
+
+// A function to draw a pixel
+function drawPixel(x, y, color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, 1, 1);
+}
+
+// draw the mandelbrot set
+drawMandelbrot();
