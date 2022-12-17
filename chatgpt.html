@@ -1,102 +1,102 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Canvas Ball</title>
-    <style>
-        canvas {
-            width: 100vw;
-            height: 100vh;
-        }
-    </style>
+  <title>Canvas Ball</title>
 </head>
-
 <body>
-    <canvas id="canvas"></canvas>
-    <script>
-        // Get canvas and context
-        var canvas = document.getElementById('canvas');
-        var context = canvas.getContext('2d');
+  <canvas id="canvas" width="100%" height="100%"></canvas>
+  <script>
+    // Get canvas and context
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
 
-        // Set ball properties
-        var ballRadius = 10;
-        var ballX = canvas.width / 2;
-        var ballY = canvas.height / 2;
+    // Set ball properties
+    var ballRadius = 10;
+    var ballX = canvas.width / 2;
+    var ballY = canvas.height / 2;
 
-        // Set cursor properties
-        var cursorX = 0;
-        var cursorY = 0;
+    // Set cursor properties
+    var cursorX = 0;
+    var cursorY = 0;
 
-        // Set ball movement speed
-        var speed = 5;
+    // Set ball movement speed
+    var speed = 5;
 
-        // Set ball color
-        var ballColor = 'red';
+    // Set ball color
+    var ballColor = 'red';
 
-        // Set ball movement direction
-        var dx = speed;
-        var dy = speed;
+    // Set ball movement direction
+    var dx = speed;
+    var dy = speed;
 
-        // Set threshold distance
-        var threshold = 20;
+    // Set canvas dimensions to window size
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-        // Draw ball on canvas
-        function drawBall() {
-            context.beginPath();
-            context.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
-            context.fillStyle = ballColor;
-            context.fill();
-            context.closePath();
-        }
+    // Set threshold distance
+    var threshold = 20;
 
-        // Update ball position
-        function updateBallPosition() {
-            // Check for ball collision with walls
-            if (ballX + dx > canvas.width - ballRadius || ballX + dx < ballRadius) {
-                dx = 0;
-            }
-            if (ballY + dy > canvas.height - ballRadius || ballY + dy < ballRadius) {
-                dy = 0;
-            }
+    // Draw ball on canvas
+    function drawBall() {
+      context.beginPath();
+      context.arc(ballX, ballY, ballRadius, 0, Math.PI*2);
+      context.fillStyle = ballColor;
+      context.fill();
+      context.closePath();
+    }
 
-            // Update ball position
-            ballX += dx;
-            ballY += dy;
-        }
+    // Update ball position
+    function updateBallPosition() {
+      // Check for ball collision with walls
+      if (ballX + dx > canvas.width - ballRadius || ballX + dx < ballRadius) {
+        dx = 0;
+      }
+      if (ballY + dy > canvas.height - ballRadius || ballY + dy < ballRadius) {
+        dy = 0;
+      }
 
-        // Update cursor position
-        function updateCursorPosition(event) {
-            cursorX = event.clientX;
-            cursorY = event.clientY;
-        }
+      // Update ball position
+      ballX += dx;
+      ballY += dy;
+    }
 
-        // Linear interpolation function
-        function lerp(start, end, t) {
-            return start + (end - start) * t;
-        }
+    // Update cursor position
+    function updateCursorPosition(event) {
+      cursorX = event.clientX;
+      cursorY = event.clientY;
+    }
 
-        // Update ball movement direction based on cursor position
-        function updateBallDirection() {
-            // Calculate new movement direction
-            dx = lerp(ballX, cursorX, 0.1);
-            dy = lerp(ballY, cursorY, 0.1);
-        }
+    // Update ball movement direction based on cursor position
+    function updateBallDirection() {
+      // Calculate distance between ball and cursor
+      var xDist = cursorX - ballX;
+      var yDist = cursorY - ballY;
+      var distance = Math.sqrt(xDist * xDist + yDist * yDist);
 
-        // Update canvas
-        function draw() {
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            drawBall();
-            updateBallPosition();
-            updateBallDirection();
-            requestAnimationFrame(draw);
-        }
+      // Calculate new movement direction
+      if (distance > threshold) {
+        dx = (xDist / distance) * speed;
+        dy = (yDist / distance) * speed;
+      } else {
+        dx = 0;
+        dy = 0;
+      }
+    }
 
-        // Start animation
-        draw();
+    // Update canvas
+    function draw() {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      drawBall();
+      updateBallPosition();
+      updateBallDirection();
+      requestAnimationFrame(draw);
+    }
 
-        // Update cursor position on mouse move
-        canvas.addEventListener('mousemove', updateCursorPosition);
-    </script>
+    // Start animation
+    draw();
+
+    // Update cursor position on mouse move
+    canvas.addEventListener('mousemove', updateCursorPosition);
+  </script>
 </body>
-
 </html>
