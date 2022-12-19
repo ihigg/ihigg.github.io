@@ -18,7 +18,7 @@ var panY = 0;
 var startTime = Date.now();
 
 for (var i = 0; i < workerCount; i++) {
-  var worker = new Worker('worker.js');
+  var worker = new Worker('js/worker.js');
   worker.onmessage = function(e) {
     var workerIndex = e.data.workerIndex;
     var partialData = e.data.data;
